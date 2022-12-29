@@ -15,7 +15,7 @@ namespace GamesAPI.Migrations
 
         protected override void Down(MigrationBuilder mb)
         {
-            mb.Sql("DELETE FROM Genres");
+            mb.Sql("Delete from Genres");
         }
     }
 }

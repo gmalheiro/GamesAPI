@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GamesAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221229002057_InitialMigration")]
-    partial class InitialMigration
+    [Migration("20221229191746_GamePopulating")]
+    partial class GamePopulating
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -27,19 +27,20 @@ namespace GamesAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("Description")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
 
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
 
-                    b.Property<string>("GenreName")
-                        .HasColumnType("longtext");
-
                     b.Property<string>("Name")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(80)
+                        .HasColumnType("varchar(80)");
 
                     b.Property<decimal>("Price")
-                        .HasColumnType("decimal(65,30)");
+                        .HasColumnType("decimal(10,2)");
 
                     b.HasKey("GameId");
 
@@ -55,7 +56,9 @@ namespace GamesAPI.Migrations
                         .HasColumnType("int");
 
                     b.Property<string>("GenreName")
-                        .HasColumnType("longtext");
+                        .IsRequired()
+                        .HasMaxLength(50)
+                        .HasColumnType("varchar(50)");
 
                     b.HasKey("GenreId");
 

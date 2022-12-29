@@ -10,8 +10,8 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace GamesAPI.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    [Migration("20221229164503_TableAdjustment")]
-    partial class TableAdjustment
+    [Migration("20221229191653_GenrePopulating")]
+    partial class GenrePopulating
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -33,9 +33,6 @@ namespace GamesAPI.Migrations
 
                     b.Property<int>("GenreId")
                         .HasColumnType("int");
-
-                    b.Property<string>("GenreName")
-                        .HasColumnType("longtext");
 
                     b.Property<string>("Name")
                         .IsRequired()
