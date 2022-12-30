@@ -8,22 +8,21 @@ namespace GamesAPI.Controllers
 {
     [Route("api/[controller]")]
     [ApiController]
-    public class GameController : ControllerBase
+    public class GenreController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public GameController(AppDbContext context)
+        public GenreController(AppDbContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        [Route("/ListAll")]
-        public ActionResult<IEnumerable<Game>> Get()
+        public ActionResult<IEnumerable<Genre>> Get()
         {
             try
             {
-                return _context.Games.AsNoTracking().ToList();
+                return _context.Genres.AsNoTracking().ToList();
 
             }
             catch (Exception ex)
@@ -35,19 +34,19 @@ namespace GamesAPI.Controllers
 
         [HttpGet("{id:int}")]
         //[Route("/ListById/{Id}")]
-        public ActionResult<Game> Get (int id)
+        public ActionResult<Genre> Get(int id)
         {
             try
             {
-                var game = _context.Games.FirstOrDefault(g => g.GameId == id);
-                if (game is null)
+                var genre = _context.Genres.FirstOrDefault(g => g.GenreId == id);
+                if (genre is null)
                 {
-                    return NotFound($"Game {id} was not found");
+                    return NotFound($"Genre {id} was not found");
                 }
-                return Ok(game);
+                return Ok(genre);
 
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return BadRequest(ex.Message);
             }
@@ -55,43 +54,43 @@ namespace GamesAPI.Controllers
         }
 
         [HttpPost]
-        public ActionResult Post(Game game)
+        [Route("/CreateGenre")]
+        public ActionResult Post(Genre genre)
         {
-            if (game is null)
-            {
-                return BadRequest("Game is null");
-            }
-            _context.Add(game);
+            if (genre is null)
+                return BadRequest("Genre is null");
+
+            _context.Add(genre);
             _context.SaveChanges();
 
-            return Ok(game);
+            return new CreatedAtRouteResult("GetGenre",
+                new { id = genre.GenreId }, genre);
         }
 
         [HttpPut]
-        public ActionResult Put(int id, Game game)
+        public ActionResult Put(int id, Genre genre)
         {
-            if (id != game.GameId)
+            if (id != genre.GenreId)
             {
                 return BadRequest();
             }
-            _context.Entry(game).State = EntityState.Modified;
+            _context.Entry(genre).State = EntityState.Modified;
             _context.SaveChanges();
-            return Ok(game);
+            return Ok(genre);
         }
 
-
         [HttpDelete("{id:int}")]
-        public ActionResult<Game> Delete(int id)
+        public ActionResult<Genre> Delete(int id)
         {
-            var game = _context.Games.FirstOrDefault(g => g.GameId == id);
+            var genre = _context.Genres.FirstOrDefault(g => g.GenreId== id);
 
-            if (game is null)
+            if (genre is null)
             {
                 return NotFound();
             }
-            _context.Games.Remove(game);
+            _context.Genres.Remove(genre);
             _context.SaveChanges();
-            return Ok(game);
+            return Ok(genre);
         }
 
     }
