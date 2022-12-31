@@ -18,6 +18,13 @@ namespace GamesAPI.Controllers
         }
 
         [HttpGet]
+        [Route("/GamesGenres")]
+        public ActionResult <IEnumerable<Genre>> GetGenresGames()
+        {
+            return _context.Genres.Include(g => g.Games).ToList();
+        }
+
+        [HttpGet]
         public ActionResult<IEnumerable<Genre>> Get()
         {
             try
@@ -88,7 +95,7 @@ namespace GamesAPI.Controllers
             {
                 return NotFound($"Genre {id} was not found");
             }
-            _context.Genres.Remove(genres);
+            _context.Genres.Remove(genre);
             _context.SaveChanges();
             return Ok(genre);
         }
