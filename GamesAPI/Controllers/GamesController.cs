@@ -6,19 +6,18 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GamesAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/[controller]")]
     [ApiController]
-    public class GameController : ControllerBase
+    public class GamesController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public GameController(AppDbContext context)
+        public GamesController(AppDbContext context)
         {
             _context = context;
         }
 
         [HttpGet]
-        [Route("/ListAll")]
         public ActionResult<IEnumerable<Game>> Get()
         {
             try
@@ -33,7 +32,7 @@ namespace GamesAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetGame")]
         //[Route("/ListById/{Id}")]
         public ActionResult<Game> Get (int id)
         {
@@ -58,16 +57,16 @@ namespace GamesAPI.Controllers
         public ActionResult Post(Game game)
         {
             if (game is null)
-            {
-                return BadRequest("Game is null");
-            }
-            _context.Add(game);
+                return BadRequest();
+
+            _context.Games.Add(game);
             _context.SaveChanges();
 
-            return Ok(game);
+            return new CreatedAtRouteResult("GetGame",
+                        new { id = game.GameId }, game);
         }
 
-        [HttpPut]
+        [HttpPut("{id:int}")]
         public ActionResult Put(int id, Game game)
         {
             if (id != game.GameId)
@@ -87,7 +86,7 @@ namespace GamesAPI.Controllers
 
             if (game is null)
             {
-                return NotFound();
+                return NotFound($"Game {id} was not found");
             }
             _context.Games.Remove(game);
             _context.SaveChanges();

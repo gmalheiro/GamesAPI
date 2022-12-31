@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace GamesAPI.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("/[controller]")]
     [ApiController]
-    public class GenreController : ControllerBase
+    public class GenresController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public GenreController(AppDbContext context)
+        public GenresController(AppDbContext context)
         {
             _context = context;
         }
@@ -32,7 +32,7 @@ namespace GamesAPI.Controllers
             }
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id:int}", Name = "GetGenre")]
         //[Route("/ListById/{Id}")]
         public ActionResult<Genre> Get(int id)
         {
@@ -54,20 +54,19 @@ namespace GamesAPI.Controllers
         }
 
         [HttpPost]
-        [Route("/CreateGenre")]
         public ActionResult Post(Genre genre)
         {
             if (genre is null)
-                return BadRequest("Genre is null");
+                return BadRequest();
 
-            _context.Add(genre);
+            _context.Genres.Add(genre);
             _context.SaveChanges();
 
             return new CreatedAtRouteResult("GetGenre",
-                new { id = genre.GenreId }, genre);
+                        new { id = genre.GenreId }, genre);
         }
 
-        [HttpPut]
+        [HttpPut("{id:int}")]
         public ActionResult Put(int id, Genre genre)
         {
             if (id != genre.GenreId)
@@ -79,16 +78,17 @@ namespace GamesAPI.Controllers
             return Ok(genre);
         }
 
+
         [HttpDelete("{id:int}")]
         public ActionResult<Genre> Delete(int id)
         {
-            var genre = _context.Genres.FirstOrDefault(g => g.GenreId== id);
+            var genre = _context.Genres.FirstOrDefault(g => g.GenreId == id);
 
             if (genre is null)
             {
-                return NotFound();
+                return NotFound($"Genre {id} was not found");
             }
-            _context.Genres.Remove(genre);
+            _context.Genres.Remove(genres);
             _context.SaveChanges();
             return Ok(genre);
         }
