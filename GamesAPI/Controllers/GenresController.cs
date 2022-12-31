@@ -29,7 +29,7 @@ namespace GamesAPI.Controllers
         {
             try
             {
-                return _context.Genres.AsNoTracking().ToList();
+                return _context.Genres.AsNoTracking().Take(10).ToList();
 
             }
             catch (Exception ex)
